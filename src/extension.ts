@@ -1,42 +1,64 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import { findFramework } from "./utils/getFramework";
+import * as fs from 'fs'
+import * as path from 'path';
+import { GenerateCodePanel } from "./panels/GenerateCodePanel";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+const frameworks: Array<string> = ["Django", "Flask", "FastAPI"];
+
 export function activate(context: vscode.ExtensionContext) {
+  let disposable = vscode.commands.registerCommand(
+    "restgate.helloWorld",
+    () => {
+      const editor = vscode.window.activeTextEditor;
+      if (!editor) {
+        vscode.window.showErrorMessage("No file is currently open");
+        return;
+      }
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "restgate" is now active!');
+      const workspaceFolder = vscode.workspace.getWorkspaceFolder(
+        editor.document.uri
+      );
+      if (!workspaceFolder) {
+        vscode.window.showErrorMessage("No workspace folder found");
+        return;
+      }
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('restgate.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from RestGate bitchesss!');
-	});
+      const frameworkUsed: string | undefined = findFramework(
+        workspaceFolder.uri.fsPath,
+        frameworks
+      );
+      // if (!frameworkUsed) {
+      //   vscode.window.showErrorMessage("Framework not recognized");
+      //   return;
+      // }
 
-	context.subscriptions.push(disposable);
+      // const panel = vscode.window.createWebviewPanel(
+      //   "generatePanel",
+      //   "Generate Snippet",
+      //   vscode.ViewColumn.One,
+      //   {}
+      // );
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "rest-gate" is now active!');
-	vscode.window.showInformationMessage("Hello world bitches")
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('rest-gate.post-endpoint', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
+      // const panelHtml = fs.readFileSync(path.join(__dirname, 'view', 'panel.html'), 'utf-8');
+      // const panelScriptUri = vscode.Uri.file(path.join(__dirname, 'view', 'index.js'));
+      // const panelScriptSrc = panel.webview.asWebviewUri(panelScriptUri);
+      // const scriptTag = `<script src="${panelScriptSrc}"></script>`;
+      // const panelHtmlWithScript = panelHtml.replace('<script src="panel.js"></script>', scriptTag);
 
-		let postEndpoint: string = "@app.route('/', methods=['POST']) \n \t def hello_world():"
-		const postSnippet = new vscode.SnippetString(postEndpoint)
+      // panel.webview.html = panelHtmlWithScript;
+      GenerateCodePanel.render(context.extensionUri)
+      
 
-		vscode.window.activeTextEditor?.insertSnippet(postSnippet);
-	});
+      // let postEndpoint: string =
+      //   "@app.route('/', methods=['POST']) \n \t def hello_world():";
+      // const postSnippet = new vscode.SnippetString(postEndpoint);
+
+      // vscode.window.activeTextEditor?.insertSnippet(postSnippet);
+    }
+  );
+
+  context.subscriptions.push(disposable);
 }
 
 // This method is called when your extension is deactivated
