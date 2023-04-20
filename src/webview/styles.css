@@ -1,0 +1,47 @@
+div#container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10vh;
+  padding-right: 15%;
+  padding-left: 10%;
+}
+
+#taskLbl, #frameworkLbl{
+  margin-right: 2vw;
+}
+
+#methodLbl{
+  margin-right: 10px;
+}
+
+.gridItem{
+  width: 60vw;
+  margin-top: 5vh;
+}
+
+label{
+  font-size: large;
+  font-weight: bold;
+}
+
+#task{
+  width: 43vw;
+}
+
+#framework{
+  width: 20vw;
+  margin-right: 2vw;
+}
+
+#method{
+  width: 25vw;
+}
+
+#codeTextArea{
+  width: 59vw;
+}
+
+#generateBtn{
+  margin-left: 50vw;
+  height: 5vh;
+}

@@ -48,7 +48,7 @@ export function activate(context: vscode.ExtensionContext) {
 
       // panel.webview.html = panelHtmlWithScript;
       GenerateCodePanel.render(context.extensionUri)
-      
+      console.log(context.extensionUri)
 
       // let postEndpoint: string =
       //   "@app.route('/', methods=['POST']) \n \t def hello_world():";

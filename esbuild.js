@@ -1,4 +1,5 @@
 const { build } = require("esbuild");
+const { copy } = require("esbuild-plugin-copy");
 
 const baseConfig = {
   bundle: true,
@@ -22,6 +23,16 @@ const webviewConfig = {
   format: "esm",
   entryPoints: ["./src/webview/main.ts"],
   outfile: "./out/webview.js",
+  plugins: [
+    // Copy webview css and ttf files to `out` directory unaltered
+    copy({
+      resolveFrom: "cwd",
+      assets: {
+        from: ["./src/webview/*.css", "./src/webview/*.ttf"],
+        to: ["./out"],
+      },
+    }),
+  ],
 };
 
 const watchConfig = {
