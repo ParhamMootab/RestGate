@@ -16,13 +16,16 @@ const vscode = acquireVsCodeApi();
 window.addEventListener("load", main);
 
 function main() {
-  const howdyBtn = document.querySelector("#howdy");
-  howdyBtn?.addEventListener("click", handleHowdyBtn);
+  const generateBtn = document.querySelector("#generateBtn");
+  generateBtn?.addEventListener("click", handleGenerateBtn);
 }
 
-const handleHowdyBtn = () => {
-  vscode.postMessage({
-    command: "howdy",
-    text: "Hey there partner",
-  });
+const handleGenerateBtn = () => {
+  const codeTextArea = document.querySelector("#codeTextArea") as HTMLTextAreaElement
+  codeTextArea.value = "hey there"
+  // const selectedFramework = (document.querySelector("#framework") as HTMLSelectElement).value;
+  // vscode.postMessage({
+  //   command: "generateCodeBtn",
+  //   framework: selectedFramework
+  // });
 };

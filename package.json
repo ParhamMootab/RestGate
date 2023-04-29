@@ -16,8 +16,9 @@
   "contributes": {
     "commands": [
       {
-        "command": "restgate.helloWorld",
-        "title": "Hello World"
+        "command": "restgate.start",
+        "title": "Generate Snippet",
+        "category": "Rest Gate"
       }
     ],
     "menus": {

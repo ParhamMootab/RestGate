@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { getUri } from "../utils/getUri";
 import { getNonce } from "../utils/getNonce";
+import { form } from "./Components";
 
 export class GenerateCodePanel {
   public static currentPanel: GenerateCodePanel | undefined;
@@ -21,10 +22,6 @@ export class GenerateCodePanel {
     if (GenerateCodePanel.currentPanel) {
       GenerateCodePanel.currentPanel._panel.reveal(vscode.ViewColumn.One);
     } else {
-      const cspSource = {
-        "Content-Security-Policy":
-          "default-src 'none'; style-src 'unsafe-inline';",
-      };
       const panel = vscode.window.createWebviewPanel(
         "hello-world",
         "Hello World",
@@ -56,11 +53,10 @@ export class GenerateCodePanel {
     webview.onDidReceiveMessage(
       (message: any) => {
         const command = message.command;
-        const text = message.text;
 
         switch (command) {
-          case "howdy":
-            vscode.window.showInformationMessage(text);
+          case "generateCodeBtn":
+            vscode.window.showInformationMessage("hey 123");
             return;
         }
       },
@@ -69,10 +65,7 @@ export class GenerateCodePanel {
     );
   }
 
-  private _getWebViewContent(
-    webview: vscode.Webview,
-    extensionUri: vscode.Uri
-  ) {
+  private _getWebViewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
     const nonce = getNonce();
     const webviewUri = getUri(webview, extensionUri, ["out", "webview.js"]);
     const stylesUri = getUri(webview, extensionUri, ["out", "styles.css"]);
@@ -84,58 +77,17 @@ export class GenerateCodePanel {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <meta http-equiv="Content-Security-Policy" content="default-src 'self' ${webview.cspSource}; script-src 'nonce-${nonce}';  style-src ${webview.cspSource} ${stylesUri};style-src-elem 'self' ${webview.cspSource};">
-          <title>Hello World!</title>
+          <title>RestGate</title>
           <link type="text/css" rel="stylesheet" href="${stylesUri}">
         </head>
+
+
         <body>
           <div id="container">
-            <form>
-              <div class="gridItem">
-                <label for="task" id="taskLbl">
-                  What do you want to do?
-                </label>
-                <vscode-dropdown id="task">
-                  <vscode-option selected value="route">Generate a new route</vscode-option>
-                  <vscode-option value="db">Generate a new database query</vscode-option>
-                </vscode-dropdown>
-              </div>
-              <div class="gridItem">
-                <label for="task" id="frameworkLbl">
-                  Using:
-                </label>
-                <vscode-dropdown id="framework">
-                  <vscode-option value="django">Django</vscode-option>
-                  <vscode-option value="flask">Flask</vscode-option>
-                  <vscode-option value="fastApi">FastAPI</vscode-option>
-                  <vscode-option value="express">Express.js</vscode-option>
-                </vscode-dropdown>
 
-                <label for="method" id="methodLbl">
-                  Method:
-                </label>
-                <vscode-dropdown id="method">
-                  <vscode-option value="get">GET</vscode-option>
-                  <vscode-option value="post">POST</vscode-option>
-                  <vscode-option value="patch">PATCH</vscode-option>
-                  <vscode-option value="delete">DELETE</vscode-option>
-                </vscode-dropdown>
-              </div>
-              <div class="gridItem">
-                <vscode-button id="generateBtn"> Generate Snippet > </vscode-button>
-              </div>
-              
-              <div class="gridItem">
-                <vscode-text-area placeholder="Code..." resize="vertical" id="codeTextArea">
-                </vscode-text-area>
-              </div>
+            ${form}
 
-              <div class="gridItem">
-                <vscode-button id="copyBtn"> Copy </vscode-button>
-              </div>
-
-            </form>
           </div>
-          
           <script type="module" nonce="${nonce}" src="${webviewUri}"></script>
         </body>
       </html>
